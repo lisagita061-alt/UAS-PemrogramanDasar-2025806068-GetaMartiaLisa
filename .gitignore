@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Environment variables (rahasia)
+.env
+backend/.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Editor
+.vscode/
