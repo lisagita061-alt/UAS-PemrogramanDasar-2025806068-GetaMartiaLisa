@@ -1,6 +1,5 @@
 const barangModel = require('../models/barangModel');
 
-// GET semua barang
 const getBarang = async (req, res) => {
     try {
         const data = await barangModel.getAllBarang();
@@ -17,7 +16,6 @@ const getBarang = async (req, res) => {
     }
 };
 
-// GET barang by ID
 const getBarangById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -43,12 +41,10 @@ const getBarangById = async (req, res) => {
     }
 };
 
-// POST tambah barang baru
 const createBarang = async (req, res) => {
     try {
         const { nama_barang, id_kategori, id_supplier, stok, harga, satuan } = req.body;
 
-        // Validasi sederhana: field wajib tidak boleh kosong
         if (!nama_barang || !stok || !harga) {
             return res.status(400).json({
                 success: false,
@@ -74,7 +70,6 @@ const createBarang = async (req, res) => {
     }
 };
 
-// PUT update barang
 const updateBarang = async (req, res) => {
     try {
         const { id } = req.params;
@@ -111,7 +106,6 @@ const updateBarang = async (req, res) => {
     }
 };
 
-// DELETE barang
 const deleteBarang = async (req, res) => {
     try {
         const { id } = req.params;

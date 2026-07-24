@@ -8,11 +8,9 @@ const kategoriRoutes = require('./routes/kategoriRoutes');
 
 const app = express();
 
-// Middleware HARUS didaftarkan duluan
 app.use(cors());
 app.use(express.json());
 
-// Route tes database
 app.get('/', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT 1 + 1 AS hasil');
@@ -28,7 +26,6 @@ app.get('/', async (req, res) => {
     }
 });
 
-// Route barang, didaftarkan SETELAH middleware
 app.use('/api/barang', barangRoutes);
 app.use('/api/kategori', kategoriRoutes);
 

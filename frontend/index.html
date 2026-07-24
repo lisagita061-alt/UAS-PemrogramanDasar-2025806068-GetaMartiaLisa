@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Inventory System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<div class="toast-container" id="toastContainer"></div>
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+        <h3>Konfirmasi Hapus</h3>
+        <p>Apakah kamu yakin ingin menghapus barang ini? Tindakan ini tidak dapat dibatalkan.</p>
+        <div class="modal-actions">
+            <button id="modalCancelBtn" class="btn btn-secondary">Batal</button>
+            <button id="modalConfirmBtn" class="btn btn-delete">Ya, Hapus</button>
+        </div>
+    </div>
+</div>
+<div class="modal-overlay" id="qrModalOverlay">
+    <div class="modal-box qr-modal-box">
+        <h3>QR Code Barang</h3>
+        <p id="qrBarangNama"></p>
+        <div id="qrcode"></div>
+        <button id="qrCloseBtn" class="btn btn-secondary">Tutup</button>
+    </div>
+</div>
+<body>
+
+    <header class="header">
+        <button id="darkModeToggle" class="dark-mode-btn">🌙</button>
+        <h1>📦 Mini Inventory System</h1>
+        <p>Kelola data barang, kategori, dan stok dengan mudah</p>
+    </header>
+
+    <main class="container">
+<section class="stats-section">
+<div id="stokWarningBanner" class="stock-banner" style="display:none;">
+    <span id="stokWarningText"></span>
+</div>
+    <div class="stat-card">
+        <span class="stat-icon">📦</span>
+        <div>
+            <p class="stat-label">Total Barang</p>
+            <h3 id="totalBarang">0</h3>
+        </div>
+    </div>
+    <div class="stat-card">
+        <span class="stat-icon">📊</span>
+        <div>
+            <p class="stat-label">Total Stok</p>
+            <h3 id="totalStok">0</h3>
+        </div>
+    </div>
+    <div class="stat-card">
+        <span class="stat-icon">💰</span>
+        <div>
+            <p class="stat-label">Total Nilai Inventaris</p>
+            <h3 id="totalNilai">Rp 0</h3>
+        </div>
+    </div>
+</section>
+<section class="chart-section">
+    <h2>Distribusi Stok per Kategori</h2>
+    <div class="chart-wrapper">
+        <div id="donutChart" class="donut-chart"></div>
+        <div id="chartLegend" class="chart-legend"></div>
+    </div>
+</section>
+        <section class="form-section">
+            <h2 id="formTitle">Tambah Barang Baru</h2>
+            <form id="barangForm">
+                <input type="hidden" id="barangId">
+
+                <div class="form-group">
+                    <label for="namaBarang">Nama Barang</label>
+                    <input type="text" id="namaBarang" placeholder="Contoh: Mouse Wireless" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="kategoriSelect">Kategori</label>
+                    <select id="kategoriSelect" required>
+                        <option value="">-- Pilih Kategori --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="stok">Stok</label>
+                    <input type="number" id="stok" placeholder="0" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="harga">Harga (Rp)</label>
+                    <input type="number" id="harga" placeholder="0" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="satuan">Satuan</label>
+                    <input type="text" id="satuan" placeholder="unit / pcs / box" value="pcs">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" id="submitBtn" class="btn btn-primary">Simpan</button>
+                    <button type="button" id="cancelBtn" class="btn btn-secondary" style="display:none;">Batal</button>
+                </div>
+            </form>
+        </section>
+
+    
+        <section class="table-section">
+        <div class="table-header">
+            <h2>Daftar Barang</h2>
+            <input type="text" id="searchInput" placeholder="🔍 Cari nama barang..." class="search-input">
+        </div>
+            <table id="barangTable">
+                <thead>
+                    <tr>
+                        <th>Nama Barang</th>
+                        <th>Kategori</th>
+                        <th>Stok</th>
+                        <th>Harga</th>
+                        <th>Satuan</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="barangTableBody">
+                   
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <script src="js/barang.js"></script>
+</body>
+</html>

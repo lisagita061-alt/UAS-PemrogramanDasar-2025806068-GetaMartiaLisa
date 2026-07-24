@@ -1,6 +1,5 @@
 const kategoriModel = require('../models/kategoriModel');
 
-// GET semua kategori
 const getKategori = async (req, res) => {
     try {
         const data = await kategoriModel.getAllKategori();
@@ -17,7 +16,6 @@ const getKategori = async (req, res) => {
     }
 };
 
-// GET kategori by ID
 const getKategoriById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -43,12 +41,10 @@ const getKategoriById = async (req, res) => {
     }
 };
 
-// POST tambah kategori baru
 const createKategori = async (req, res) => {
     try {
         const { nama_kategori, keterangan } = req.body;
 
-        // Validasi: nama kategori wajib diisi
         if (!nama_kategori) {
             return res.status(400).json({
                 success: false,
@@ -72,7 +68,6 @@ const createKategori = async (req, res) => {
     }
 };
 
-// PUT update kategori
 const updateKategori = async (req, res) => {
     try {
         const { id } = req.params;
@@ -107,7 +102,6 @@ const updateKategori = async (req, res) => {
     }
 };
 
-// DELETE kategori
 const deleteKategori = async (req, res) => {
     try {
         const { id } = req.params;
