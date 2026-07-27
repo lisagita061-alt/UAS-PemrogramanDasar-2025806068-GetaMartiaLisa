@@ -7,25 +7,6 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
-<div class="toast-container" id="toastContainer"></div>
-<div class="modal-overlay" id="modalOverlay">
-    <div class="modal-box">
-        <h3>Konfirmasi Hapus</h3>
-        <p>Apakah kamu yakin ingin menghapus barang ini? Tindakan ini tidak dapat dibatalkan.</p>
-        <div class="modal-actions">
-            <button id="modalCancelBtn" class="btn btn-secondary">Batal</button>
-            <button id="modalConfirmBtn" class="btn btn-delete">Ya, Hapus</button>
-        </div>
-    </div>
-</div>
-<div class="modal-overlay" id="qrModalOverlay">
-    <div class="modal-box qr-modal-box">
-        <h3>QR Code Barang</h3>
-        <p id="qrBarangNama"></p>
-        <div id="qrcode"></div>
-        <button id="qrCloseBtn" class="btn btn-secondary">Tutup</button>
-    </div>
-</div>
 <body>
 
     <header class="header">
@@ -34,104 +15,353 @@
         <p>Kelola data barang, kategori, dan stok dengan mudah</p>
     </header>
 
+    <!-- Navigasi Halaman -->
+    <nav class="nav-tabs">
+        <button class="nav-btn active" data-page="dashboard">📊 Dashboard</button>
+        <button class="nav-btn" data-page="barang">📦 Kelola Barang</button>
+        <button class="nav-btn" data-page="kategori">🏷️ Kelola Kategori</button>
+        <button class="nav-btn" data-page="supplier">🚚 Kelola Supplier</button>
+        <button class="nav-btn" data-page="pesanan">🛒 Pesanan</button>
+    </nav>
+
     <main class="container">
-<section class="stats-section">
-<div id="stokWarningBanner" class="stock-banner" style="display:none;">
-    <span id="stokWarningText"></span>
-</div>
-    <div class="stat-card">
-        <span class="stat-icon">📦</span>
-        <div>
-            <p class="stat-label">Total Barang</p>
-            <h3 id="totalBarang">0</h3>
+
+        <!-- ===== HALAMAN DASHBOARD ===== -->
+        <div class="page active" id="page-dashboard">
+
+            <div class="stock-banner" id="stokWarningBanner" style="display:none;">
+                <span id="stokWarningText"></span>
+            </div>
+
+            <section class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div>
+                        <div class="stat-label">Total Barang</div>
+                        <h3 id="totalBarang">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div>
+                        <div class="stat-label">Total Stok</div>
+                        <h3 id="totalStok">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div>
+                        <div class="stat-label">Total Nilai Inventaris</div>
+                        <h3 id="totalNilai">Rp0</h3>
+                    </div>
+                </div>
+            </section>
+
+            <section class="chart-section">
+                <h2>Distribusi Stok per Kategori</h2>
+                <div class="chart-wrapper">
+                    <div id="donutChart" class="donut-chart"></div>
+                    <div id="chartLegend" class="chart-legend"></div>
+                </div>
+            </section>
         </div>
-    </div>
-    <div class="stat-card">
-        <span class="stat-icon">📊</span>
-        <div>
-            <p class="stat-label">Total Stok</p>
-            <h3 id="totalStok">0</h3>
+
+        <!-- ===== HALAMAN KELOLA BARANG ===== -->
+        <div class="page" id="page-barang">
+            <div class="page-grid">
+                <section class="form-section">
+                    <h2 id="formTitle">Tambah Barang Baru</h2>
+                    <form id="barangForm">
+                        <input type="hidden" id="barangId">
+
+                        <div class="form-group">
+                            <label for="namaBarang">Nama Barang</label>
+                            <input type="text" id="namaBarang" placeholder="Contoh: Mouse Wireless" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="kategoriSelect">Kategori</label>
+                            <select id="kategoriSelect" required>
+                                <option value="">-- Pilih Kategori --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="supplierSelect">Supplier</label>
+                            <select id="supplierSelect">
+                                <option value="">-- Pilih Supplier --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="stok">Stok</label>
+                            <input type="number" id="stok" placeholder="0" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="harga">Harga (Rp)</label>
+                            <input type="number" id="harga" placeholder="0" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="satuan">Satuan</label>
+                            <input type="text" id="satuan" placeholder="unit / pcs / box" value="pcs">
+                        </div>
+
+                       <div class="form-group">
+                        <label for="fotoBarang">Foto Barang</label>
+                        <input type="file" id="fotoBarang" accept="image/*">
+                        <div id="previewWrapper" style="display:none; margin-top:8px;">
+                        <img id="previewFoto" src="" alt="" style="max-width:120px; display:block; border-radius:8px; margin-bottom:6px;">
+                        <button type="button" id="hapusFotoBtn" class="btn btn-secondary" style="padding:4px 10px; font-size:12px;">🗑️ Hapus Foto</button>
+                    </div>
+                 <input type="hidden" id="fotoLama">
+                    </div>
+                    
+                        <div class="form-actions">
+                            <button type="submit" id="submitBtn" class="btn btn-primary">Simpan</button>
+                            <button type="button" id="cancelBtn" class="btn btn-secondary" style="display:none;">Batal</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="table-section">
+                    <div class="table-header">
+                        <h2>Daftar Barang</h2>
+                        <input type="text" id="searchInput" placeholder="🔍 Cari nama barang..." class="search-input">
+                    </div>
+                    <table id="barangTable">
+                        <thead>
+                            <tr>
+                                <th>Foto</th>
+                                <th>Nama Barang</th>
+                                <th>Kategori</th>
+                                <th>Supplier</th>
+                                <th>Stok</th>
+                                <th>Harga</th>
+                                <th>Satuan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="barangTableBody"></tbody>
+                    </table>
+                </section>
+            </div>
         </div>
-    </div>
-    <div class="stat-card">
-        <span class="stat-icon">💰</span>
-        <div>
-            <p class="stat-label">Total Nilai Inventaris</p>
-            <h3 id="totalNilai">Rp 0</h3>
+
+        <!-- ===== HALAMAN KELOLA KATEGORI ===== -->
+        <div class="page" id="page-kategori">
+            <div class="page-grid">
+                <section class="form-section">
+                    <h2 id="kategoriFormTitle">Tambah Kategori Baru</h2>
+                    <form id="kategoriForm">
+                        <input type="hidden" id="kategoriId">
+
+                        <div class="form-group">
+                            <label for="namaKategori">Nama Kategori</label>
+                            <input type="text" id="namaKategori" placeholder="Contoh: Elektronik" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="keteranganKategori">Keterangan</label>
+                            <input type="text" id="keteranganKategori" placeholder="Deskripsi singkat kategori">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" id="kategoriSubmitBtn" class="btn btn-primary">Simpan</button>
+                            <button type="button" id="kategoriCancelBtn" class="btn btn-secondary" style="display:none;">Batal</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="table-section">
+                    <div class="table-header">
+                        <h2>Daftar Kategori</h2>
+                    </div>
+                    <table id="kategoriTable">
+                        <thead>
+                            <tr>
+                                <th>Nama Kategori</th>
+                                <th>Keterangan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kategoriTableBody"></tbody>
+                    </table>
+                </section>
+            </div>
         </div>
-    </div>
-</section>
-<section class="chart-section">
-    <h2>Distribusi Stok per Kategori</h2>
-    <div class="chart-wrapper">
-        <div id="donutChart" class="donut-chart"></div>
-        <div id="chartLegend" class="chart-legend"></div>
-    </div>
-</section>
-        <section class="form-section">
-            <h2 id="formTitle">Tambah Barang Baru</h2>
-            <form id="barangForm">
-                <input type="hidden" id="barangId">
 
-                <div class="form-group">
-                    <label for="namaBarang">Nama Barang</label>
-                    <input type="text" id="namaBarang" placeholder="Contoh: Mouse Wireless" required>
-                </div>
+        <!-- ===== HALAMAN KELOLA SUPPLIER ===== -->
+        <div class="page" id="page-supplier">
+            <div class="page-grid">
+                <section class="form-section">
+                    <h2 id="supplierFormTitle">Tambah Supplier Baru</h2>
+                    <form id="supplierForm">
+                        <input type="hidden" id="supplierId">
 
-                <div class="form-group">
-                    <label for="kategoriSelect">Kategori</label>
-                    <select id="kategoriSelect" required>
-                        <option value="">-- Pilih Kategori --</option>
-                    </select>
-                </div>
+                        <div class="form-group">
+                            <label for="namaSupplier">Nama Supplier</label>
+                            <input type="text" id="namaSupplier" placeholder="Contoh: CV Sumber Makmur" required>
+                        </div>
 
-                <div class="form-group">
-                    <label for="stok">Stok</label>
-                    <input type="number" id="stok" placeholder="0" min="0" required>
-                </div>
+                        <div class="form-group">
+                            <label for="kontakSupplier">Kontak</label>
+                            <input type="text" id="kontakSupplier" placeholder="Contoh: 081234567890">
+                        </div>
 
-                <div class="form-group">
-                    <label for="harga">Harga (Rp)</label>
-                    <input type="number" id="harga" placeholder="0" min="0" required>
-                </div>
+                        <div class="form-group">
+                            <label for="alamatSupplier">Alamat</label>
+                            <input type="text" id="alamatSupplier" placeholder="Alamat supplier">
+                        </div>
 
-                <div class="form-group">
-                    <label for="satuan">Satuan</label>
-                    <input type="text" id="satuan" placeholder="unit / pcs / box" value="pcs">
-                </div>
+                        <div class="form-actions">
+                            <button type="submit" id="supplierSubmitBtn" class="btn btn-primary">Simpan</button>
+                            <button type="button" id="supplierCancelBtn" class="btn btn-secondary" style="display:none;">Batal</button>
+                        </div>
+                    </form>
+                </section>
 
-                <div class="form-actions">
-                    <button type="submit" id="submitBtn" class="btn btn-primary">Simpan</button>
-                    <button type="button" id="cancelBtn" class="btn btn-secondary" style="display:none;">Batal</button>
-                </div>
-            </form>
-        </section>
-
-    
-        <section class="table-section">
-        <div class="table-header">
-            <h2>Daftar Barang</h2>
-            <input type="text" id="searchInput" placeholder="🔍 Cari nama barang..." class="search-input">
+                <section class="table-section">
+                    <div class="table-header">
+                        <h2>Daftar Supplier</h2>
+                    </div>
+                    <table id="supplierTable">
+                        <thead>
+                            <tr>
+                                <th>Nama Supplier</th>
+                                <th>Kontak</th>
+                                <th>Alamat</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="supplierTableBody"></tbody>
+                    </table>
+                </section>
+            </div>
         </div>
-            <table id="barangTable">
-                <thead>
-                    <tr>
-                        <th>Nama Barang</th>
-                        <th>Kategori</th>
-                        <th>Stok</th>
-                        <th>Harga</th>
-                        <th>Satuan</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="barangTableBody">
-                   
-                </tbody>
-            </table>
-        </section>
+
+        <!-- ===== HALAMAN PESANAN ===== -->
+        <div class="page" id="page-pesanan">
+            <div class="page-grid">
+                <section class="form-section">
+                    <h2>Buat Pesanan Baru</h2>
+                    <form id="pesananForm">
+                        <div class="form-group">
+                            <label for="pesananBarangSelect">Pilih Barang</label>
+                            <select id="pesananBarangSelect" required>
+                                <option value="">-- Pilih Barang --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pesananJumlah">Jumlah Pesan</label>
+                            <input type="number" id="pesananJumlah" placeholder="0" min="1" required>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Buat Pesanan</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="table-section">
+                    <div class="table-header">
+                        <h2>Daftar Pesanan</h2>
+                    </div>
+                    <table id="pesananTable">
+                        <thead>
+                            <tr>
+                                <th>Nama Barang</th>
+                                <th>Jumlah</th>
+                                <th>Total Bayar</th>
+                                <th>Pembayaran</th>
+                                <th>Status</th>
+                                <th>Tanggal</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pesananTableBody"></tbody>
+                    </table>
+                </section>
+            </div>
+        </div>
 
     </main>
 
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Modal Konfirmasi Hapus Barang -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <h3>Konfirmasi Hapus</h3>
+            <p>Apakah kamu yakin ingin menghapus barang ini? Tindakan ini tidak dapat dibatalkan.</p>
+            <div class="modal-actions">
+                <button id="modalCancelBtn" class="btn btn-secondary">Batal</button>
+                <button id="modalConfirmBtn" class="btn btn-delete">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Hapus Kategori -->
+    <div class="modal-overlay" id="modalKategoriOverlay">
+        <div class="modal-box">
+            <h3>Konfirmasi Hapus</h3>
+            <p>Apakah kamu yakin ingin menghapus kategori ini? Barang yang terhubung akan kehilangan kategorinya.</p>
+            <div class="modal-actions">
+                <button id="modalKategoriCancelBtn" class="btn btn-secondary">Batal</button>
+                <button id="modalKategoriConfirmBtn" class="btn btn-delete">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Hapus Supplier -->
+    <div class="modal-overlay" id="modalSupplierOverlay">
+        <div class="modal-box">
+            <h3>Konfirmasi Hapus</h3>
+            <p>Apakah kamu yakin ingin menghapus supplier ini? Barang yang terhubung akan kehilangan datanya supplier.</p>
+            <div class="modal-actions">
+                <button id="modalSupplierCancelBtn" class="btn btn-secondary">Batal</button>
+                <button id="modalSupplierConfirmBtn" class="btn btn-delete">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal QR Code -->
+    <div class="modal-overlay" id="qrModalOverlay">
+        <div class="modal-box qr-modal-box">
+            <h3>QR Code Barang</h3>
+            <p id="qrBarangNama"></p>
+            <div id="qrcode"></div>
+            <button id="qrCloseBtn" class="btn btn-secondary">Tutup</button>
+        </div>
+    </div>
+
+    <!-- Modal QR Pembayaran (QRIS) -->
+    <div class="modal-overlay" id="qrisModalOverlay">
+        <div class="modal-box qr-modal-box">
+            <h3>Pembayaran QRIS</h3>
+            <p id="qrisNamaBarang" class="qris-info"></p>
+            <div class="qris-box">
+                <div id="qriscode"></div>
+                <p class="qris-total" id="qrisTotal">Rp0</p>
+                <p class="qris-info">Scan QR ini dengan aplikasi e-wallet / m-banking</p>
+            </div>
+            <div class="modal-actions">
+                <button id="qrisCancelBtn" class="btn btn-secondary">Batal</button>
+                <button id="qrisConfirmBtn" class="btn btn-primary">Sudah Bayar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Area Cetak Nota (cuma muncul pas print) -->
+    <div id="invoiceArea"></div>
+
     <script src="js/barang.js"></script>
+    <script src="js/kategori.js"></script>
+    <script src="js/supplier.js"></script>
+    <script src="js/pesanan.js"></script>
+    <script src="js/nav.js"></script>
 </body>
 </html>

@@ -1,4 +1,3 @@
-
 :root {
     --bg-color: #f4f6f8;
     --card-bg: #ffffff;
@@ -6,31 +5,43 @@
     --border-color: #dddddd;
 }
 
-body.dark-mode {
-    --bg-color: #1a1d23;
-    --card-bg: #262a33;
-    --text-color: #e0e0e0;
-    --border-color: #3a3f4b;
-}
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: hidden;
+}
+
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background-color: var(--bg-color);
+    background: linear-gradient(135deg, #a8c8f0 0%, #d4b8e8 50%, #a8e0d8 100%);
+    background-attachment: fixed;
     color: var(--text-color);
     line-height: 1.6;
     transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+body.dark-mode {
+    background: linear-gradient(135deg, #1a1d23 0%, #14171d 50%, #1e222a 100%);
+    background-attachment: fixed;
 }
 
+/* ===== Header ===== */
 .header {
     background: linear-gradient(135deg, #2c3e50, #4a6fa5);
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06) 0%, transparent 50%),
+        linear-gradient(135deg, #2c3e50, #4a6fa5);
     color: white;
-    padding: 30px 20px;
+    padding: 35px 20px;
     text-align: center;
+    position: relative;
+    overflow: hidden;
 }
 
 .header h1 {
@@ -43,30 +54,98 @@ body {
     opacity: 0.85;
 }
 
+.dark-mode-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.dark-mode-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+/* ===== Layout Utama ===== */
 .container {
-    max-width: 1100px;
+    max-width: 1300px;
     margin: 30px auto;
     padding: 0 20px;
     display: flex;
     flex-wrap: wrap;
     gap: 25px;
+    width: 100%;
+}
+
+/* ===== Kartu Dasar (dipakai form, table, chart, stat) ===== */
+.form-section,
+.table-section,
+.chart-section,
+.stat-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-section:hover,
+.table-section:hover,
+.chart-section:hover,
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .form-section {
-    background: var(--card-bg);
-    border-radius: 10px;
-    padding: 25px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     flex: 1 1 320px;
     height: fit-content;
+    min-width: 0;
 }
 
-.form-section h2 {
+.table-section {
+    flex: 2 1 500px;
+    overflow-x: auto;
+    min-width: 0;
+}
+
+.chart-section {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+/* ===== Judul Section dengan Aksen Garis ===== */
+.form-section h2,
+.table-header h2,
+.chart-section h2 {
+    position: relative;
+    padding-left: 14px;
     margin-bottom: 20px;
     color: #2c3e50;
     font-size: 20px;
 }
 
+.form-section h2::before,
+.table-header h2::before,
+.chart-section h2::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 2px;
+    bottom: 2px;
+    width: 4px;
+    background: linear-gradient(180deg, #4a6fa5, #6c5ce7);
+    border-radius: 4px;
+}
+
+/* ===== Form ===== */
 .form-group {
     margin-bottom: 15px;
 }
@@ -103,6 +182,7 @@ body {
     margin-top: 20px;
 }
 
+/* ===== Tombol ===== */
 .btn {
     padding: 10px 20px;
     border: none;
@@ -114,13 +194,15 @@ body {
 }
 
 .btn-primary {
-    background-color: #4a6fa5;
+    background: linear-gradient(135deg, #4a6fa5, #5a7fb5);
     color: white;
+    box-shadow: 0 4px 12px rgba(74, 111, 165, 0.3);
 }
 
 .btn-primary:hover {
-    background-color: #365a87;
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #365a87, #4a6fa5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(74, 111, 165, 0.4);
 }
 
 .btn-secondary {
@@ -137,14 +219,6 @@ body {
     color: white;
     padding: 6px 12px;
     font-size: 13px;
-    margin-right: 5px;
-}
-
-td:last-child {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: center;
 }
 
 .btn-edit:hover {
@@ -158,31 +232,22 @@ td:last-child {
     font-size: 13px;
 }
 
-td:last-child {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: center;
-}
 .btn-delete:hover {
     background-color: #c0392b;
 }
 
-.table-section {
-    background: var(--card-bg);
-    border-radius: 10px;
-    padding: 25px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    flex: 2 1 500px;
-    overflow-x: auto;
+.btn-qr {
+    background-color: #6c5ce7;
+    color: white;
+    padding: 6px 12px;
+    font-size: 13px;
 }
 
-.table-section h2 {
-    margin-bottom: 20px;
-    color: #2c3e50;
-    font-size: 20px;
+.btn-qr:hover {
+    background-color: #5849c4;
 }
 
+/* ===== Tabel ===== */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -194,9 +259,24 @@ thead {
 
 th, td {
     text-align: left;
-    padding: 12px 10px;
+    padding: 14px 16px;
     border-bottom: 1px solid #eee;
     font-size: 14px;
+    vertical-align: middle;
+}
+
+#barangTable td:first-child,
+#barangTable th:first-child {
+    padding-left: 20px;
+}
+
+#barangTable td:nth-child(2) {
+    max-width: 160px;
+}
+
+#pesananTable td:first-child,
+#pesananTable th:first-child {
+    padding-left: 20px;
 }
 
 th {
@@ -212,78 +292,17 @@ tbody tr:hover {
     background-color: #f9fafb;
 }
 
-@media (max-width: 768px) {
-    .stats-section {
-        flex-direction: column;
-    }
-
-    .table-header {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .search-input {
-        width: 100%;
-    }
-
-    .dark-mode-btn {
-        position: static;
-        margin-bottom: 10px;
-    }
-    .container {
-        flex-direction: column;
-    }
-
-    .form-section,
-    .table-section {
-        flex: 1 1 100%;
-    }
-
-    .header h1 {
-        font-size: 22px;
-    }
-
-    table {
-        font-size: 12px;
-    }
-
-    th, td {
-        padding: 8px 6px;
-    }
-}
-
-.stats-section {
+td:last-child {
     display: flex;
-    gap: 20px;
     flex-wrap: wrap;
-    width: 100%;
-    margin-bottom: 5px;
-}
-
-.stat-card {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    display: flex;
+    gap: 6px;
     align-items: center;
-    gap: 15px;
-    flex: 1 1 200px;
 }
 
-.stat-icon {
-    font-size: 32px;
-}
-
-.stat-label {
-    font-size: 13px;
-    color: #888;
-    margin-bottom: 4px;
-}
-
-.stat-card h3 {
-    font-size: 22px;
-    color: #2c3e50;
+td:last-child button {
+    flex: 1 1 auto;
+    min-width: 45px;
+    text-align: center;
 }
 
 .table-header {
@@ -312,28 +331,100 @@ tbody tr:hover {
     border-color: #4a6fa5;
 }
 
-.dark-mode-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
+/* ===== Dashboard Statistik ===== */
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+    .stats-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1 1 200px;
+}
+
+.stat-icon {
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #4a6fa5, #6c5ce7);
+    flex-shrink: 0;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 4px;
+}
+
+.stat-card h3 {
+    font-size: 22px;
+    color: #2c3e50;
+}
+
+/* ===== Donut Chart ===== */
+.chart-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.donut-chart {
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.dark-mode-btn:hover {
-    background: rgba(255, 255, 255, 0.35);
-}
-
-.header {
+    flex-shrink: 0;
     position: relative;
 }
 
+.donut-chart::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90px;
+    height: 90px;
+    background: var(--card-bg);
+    border-radius: 50%;
+}
+
+.chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.legend-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+/* ===== Toast Notification ===== */
 .toast-container {
     position: fixed;
     top: 20px;
@@ -368,6 +459,7 @@ tbody tr:hover {
     to { opacity: 0; }
 }
 
+/* ===== Badge Stok ===== */
 .badge {
     display: inline-block;
     padding: 3px 10px;
@@ -379,7 +471,52 @@ tbody tr:hover {
 
 .badge-low { background-color: #fdecea; color: #e74c3c; }
 .badge-safe { background-color: #eafaf1; color: #2ecc71; }
+.badge-pending { background-color: #fff3cd; color: #856404; }
+.badge-lunas { background-color: #eafaf1; color: #2ecc71; }
 
+.btn-bayar {
+    background-color: #1abc9c;
+    color: white;
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+.btn-bayar:hover {
+    background-color: #159d83;
+}
+
+.qris-total {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 10px 0;
+}
+
+.qris-info {
+    font-size: 13px;
+    color: #888;
+}
+
+/* ===== Banner Peringatan Stok ===== */
+.stock-banner {
+    width: 100%;
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffe69c;
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    animation: fadeInBanner 0.4s ease;
+}
+
+@keyframes fadeInBanner {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Modal (Konfirmasi Hapus & QR Code) ===== */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -421,116 +558,259 @@ tbody tr:hover {
     gap: 10px;
 }
 
-.stock-banner {
-    width: 100%;
-    background-color: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffe69c;
-    border-radius: 8px;
-    padding: 12px 18px;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 5px;
-    animation: fadeInBanner 0.4s ease;
-}
-
-@keyframes fadeInBanner {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===== Modal QR Code ===== */
 .qr-modal-box {
     text-align: center;
 }
 
-#qrcode {
+#qrcode, #qriscode {
     display: flex;
     justify-content: center;
-    margin: 15px 0;
+    align-items: center;
+    width: 100%;
 }
 
-.btn-qr {
-    background-color: #6c5ce7;
+#qrcode img, #qrcode canvas, #qrcode table,
+#qriscode img, #qriscode canvas, #qriscode table {
+    display: block;
+    margin: 0 auto !important;
+}
+
+.qris-box {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 12px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ===== Responsive Mobile ===== */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .form-section,
+    .table-section {
+        flex: 1 1 100%;
+    }
+
+    .header h1 {
+        font-size: 22px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 8px 6px;
+    }
+
+    .stats-section {
+        flex-direction: column;
+    }
+
+    .table-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+
+    .dark-mode-btn {
+        position: static;
+        margin-bottom: 10px;
+    }
+}
+
+/* ===== Navigasi Tab ===== */
+.nav-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    background: var(--card-bg);
+    padding: 12px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background: rgba(74, 111, 165, 0.1);
+}
+
+.nav-btn.active {
+    background: linear-gradient(135deg, #4a6fa5, #6c5ce7);
+    color: white;
+}
+
+/* ===== Sistem Halaman (Show/Hide) ===== */
+.page {
+    display: none;
+    flex: 1 1 100%;
+    width: 100%;
+}
+
+.page.active {
+    display: block;
+    animation: fadeInPage 0.3s ease;
+}
+
+@keyframes fadeInPage {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.page-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    width: 100%;
+}
+
+.page-grid .form-section {
+    flex: 1 1 320px;
+    height: fit-content;
+    min-width: 0;
+}
+
+.page-grid .table-section {
+    flex: 2 1 500px;
+    overflow-x: auto;
+    min-width: 0;
+}
+
+/* Halaman Pesanan kolomnya lebih banyak -> tabel dikasih baris penuh sendiri biar gak sempit */
+#page-pesanan .page-grid {
+    flex-direction: column;
+}
+
+#page-pesanan .form-section,
+#page-pesanan .table-section {
+    flex: 1 1 100%;
+    width: 100%;
+}
+
+.foto-thumbnail {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.foto-placeholder {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee;
+    border-radius: 6px;
+    font-size: 18px;
+}
+.btn-cetak {
+    background-color: #34495e;
     color: white;
     padding: 6px 12px;
     font-size: 13px;
-    margin-left: 5px;
-}
-td:last-child {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: center;
 }
 
-.btn-qr:hover {
-    background-color: #5849c4;
+.btn-cetak:hover {
+    background-color: #22303c;
 }
 
-.chart-section {
-    background: var(--card-bg);
-    border-radius: 10px;
-    padding: 25px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    width: 100%;
-    margin-bottom: 5px;
+/* ===== Nota / Invoice Cetak ===== */
+#invoiceArea {
+    display: none;
 }
 
-.chart-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    flex-wrap: wrap;
+.invoice-box {
+    max-width: 380px;
+    margin: 0 auto;
+    font-family: 'Courier New', monospace;
+    color: #000;
 }
 
-.donut-chart {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-.chart-legend {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-}
-
-.legend-color {
-    width: 14px;
-    height: 14px;
-    border-radius: 3px;
-    flex-shrink: 0;
-}
-.donut-chart {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    position: relative;
-}
-
-.donut-chart::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90px;
-    height: 90px;
-    background: var(--card-bg);
-    border-radius: 50%;
-}
-td:last-child button {
-    flex: 1 1 auto;
-    min-width: 45px;
+.invoice-box h2 {
     text-align: center;
+    font-size: 18px;
+    margin-bottom: 2px;
+}
+
+.invoice-sub {
+    text-align: center;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.invoice-box hr {
+    border: none;
+    border-top: 1px dashed #000;
+    margin: 10px 0;
+}
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.invoice-table td, .invoice-table th {
+    padding: 4px 2px;
+    border: none;
+    font-size: 13px;
+}
+
+.invoice-items th {
+    text-align: left;
+    border-bottom: 1px dashed #000;
+}
+
+.invoice-total {
+    font-weight: 700;
+    font-size: 15px;
+    text-align: right;
+    margin-top: 8px;
+}
+
+.invoice-footer {
+    text-align: center;
+    font-size: 12px;
+    margin-top: 14px;
+}
+
+/* Pas dicetak/print, sembunyiin semua isi web KECUALI nota */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #invoiceArea, #invoiceArea * {
+        visibility: visible;
+    }
+
+    #invoiceArea {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px;
+    }
 }

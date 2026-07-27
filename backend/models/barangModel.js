@@ -19,28 +19,28 @@ const getBarangById = async (id) => {
         LEFT JOIN supplier s ON b.id_supplier = s.id_supplier
         WHERE b.id_barang = ?
     `, [id]);
-    return rows[0]; 
+    return rows[0];
 };
 
 const createBarang = async (data) => {
-    const { nama_barang, id_kategori, id_supplier, stok, harga, satuan } = data;
+    const { nama_barang, id_kategori, id_supplier, stok, harga, satuan, foto } = data;
     const [result] = await pool.query(
-        `INSERT INTO barang (nama_barang, id_kategori, id_supplier, stok, harga, satuan)
-         VALUES (?, ?, ?, ?, ?, ?)`,
-        [nama_barang, id_kategori, id_supplier, stok, harga, satuan]
+        `INSERT INTO barang (nama_barang, id_kategori, id_supplier, stok, harga, satuan, foto)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [nama_barang, id_kategori, id_supplier, stok, harga, satuan, foto]
     );
-    return result.insertId; 
+    return result.insertId;
 };
 
 const updateBarang = async (id, data) => {
-    const { nama_barang, id_kategori, id_supplier, stok, harga, satuan } = data;
+    const { nama_barang, id_kategori, id_supplier, stok, harga, satuan, foto } = data;
     const [result] = await pool.query(
         `UPDATE barang
-         SET nama_barang = ?, id_kategori = ?, id_supplier = ?, stok = ?, harga = ?, satuan = ?
+         SET nama_barang = ?, id_kategori = ?, id_supplier = ?, stok = ?, harga = ?, satuan = ?, foto = ?
          WHERE id_barang = ?`,
-        [nama_barang, id_kategori, id_supplier, stok, harga, satuan, id]
+        [nama_barang, id_kategori, id_supplier, stok, harga, satuan, foto, id]
     );
-    return result.affectedRows; 
+    return result.affectedRows;
 };
 
 const deleteBarang = async (id) => {

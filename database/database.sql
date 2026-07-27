@@ -26,10 +26,27 @@ CREATE TABLE barang (
     stok INT NOT NULL DEFAULT 0,
     harga DECIMAL(12,2) NOT NULL DEFAULT 0,
     satuan VARCHAR(20) DEFAULT 'pcs',
+    foto VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_kategori) REFERENCES kategori(id_kategori)
         ON DELETE SET NULL,
     FOREIGN KEY (id_supplier) REFERENCES supplier(id_supplier)
+        ON DELETE SET NULL
+);
+
+-- Tabel pesanan
+CREATE TABLE pesanan (
+    id_pesanan INT AUTO_INCREMENT PRIMARY KEY,
+    id_barang INT,
+    jumlah INT NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'Pending',
+    total_bayar DECIMAL(12,2) NOT NULL DEFAULT 0,
+    status_pembayaran VARCHAR(20) NOT NULL DEFAULT 'Belum Bayar',
+    metode_pembayaran VARCHAR(20) DEFAULT NULL,
+    kode_pembayaran VARCHAR(50) DEFAULT NULL,
+    tanggal_pesan TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    tanggal_bayar TIMESTAMP NULL DEFAULT NULL,
+    FOREIGN KEY (id_barang) REFERENCES barang(id_barang)
         ON DELETE SET NULL
 );
 
