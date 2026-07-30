@@ -44,7 +44,7 @@ Aplikasi ini memungkinkan pengguna untuk melakukan pencatatan barang inventaris 
 - 🪟 Modal konfirmasi custom untuk aksi hapus
 - 💸Pesanan & Pembayaran QRIS** — buat pesanan, bayar via simulasi QR code, cetak nota setelah pembayaran lunas, lalu tandai pesanan selesai (otomatis mengurangi stok)
 - 🧾cetak nota, bukti pembayaran 
-
+-🧾export & laporan csv inventaris 
 
 
 ## 📁 Struktur Project

@@ -436,3 +436,101 @@ function renderDonutChart(dataBarang) {
     donutChart.style.setProperty('--hole', 'radial-gradient(circle, var(--card-bg) 50%, transparent 50%)');
     chartLegend.innerHTML = legendHTML;
 }
+// ===== EXPORT LAPORAN KE CSV (bisa dibuka di Excel) =====
+const exportCsvBtn = document.getElementById('exportCsvBtn');
+exportCsvBtn.addEventListener('click', () => {
+    if (semuaBarang.length === 0) {
+        alert('Belum ada data barang untuk diexport.');
+        return;
+    }
+
+    const header = ['No', 'Nama Barang', 'Kategori', 'Supplier', 'Stok', 'Harga', 'Satuan', 'Total Nilai'];
+    const rows = semuaBarang.map((b, i) => [
+        i + 1,
+        b.nama_barang,
+        b.nama_kategori || '-',
+        b.nama_supplier || '-',
+        b.stok,
+        b.harga,
+        b.satuan,
+        b.stok * b.harga
+    ]);
+
+    // Escape koma/kutip biar CSV gak rusak kalau ada nama yang mengandung koma
+    const escapeCsv = (val) => {
+        const str = String(val);
+        if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+            return '"' + str.replace(/"/g, '""') + '"';
+        }
+        return str;
+    };
+
+    let csvContent = header.map(escapeCsv).join(',') + '\n';
+    rows.forEach(row => {
+        csvContent += row.map(escapeCsv).join(',') + '\n';
+    });
+
+    // Tambahkan BOM (\uFEFF) biar Excel baca karakter khusus (Rp, dll) dengan benar
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    const tanggalFile = new Date().toISOString().slice(0, 10);
+
+    link.href = url;
+    link.download = `laporan-inventaris-${tanggalFile}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    showToast('Laporan CSV berhasil diunduh!', 'success');
+});
+
+// ===== CETAK LAPORAN (versi rapi buat diprint/PDF) =====
+const cetakLaporanBtn = document.getElementById('cetakLaporanBtn');
+cetakLaporanBtn.addEventListener('click', () => {
+    if (semuaBarang.length === 0) {
+        alert('Belum ada data barang untuk dicetak.');
+        return;
+    }
+
+    const totalNilai = semuaBarang.reduce((sum, b) => sum + (b.stok * b.harga), 0);
+    const tanggalCetak = new Date().toLocaleDateString('id-ID', {
+        day: '2-digit', month: 'long', year: 'numeric'
+    });
+
+    const barisTabel = semuaBarang.map((b, i) => `
+        <tr>
+            <td>${i + 1}</td>
+            <td>${b.nama_barang}</td>
+            <td>${b.nama_kategori || '-'}</td>
+            <td>${b.nama_supplier || '-'}</td>
+            <td style="text-align:center;">${b.stok}</td>
+            <td style="text-align:right;">${new Intl.NumberFormat('id-ID').format(b.harga)}</td>
+            <td style="text-align:right;">${new Intl.NumberFormat('id-ID').format(b.stok * b.harga)}</td>
+        </tr>
+    `).join('');
+
+    const invoiceArea = document.getElementById('invoiceArea');
+    invoiceArea.innerHTML = `
+        <div class="invoice-box" style="max-width:100%;">
+            <h2>📦 Mini Inventory System</h2>
+            <p class="invoice-sub">Laporan Data Inventaris — ${tanggalCetak}</p>
+            <hr>
+            <table class="invoice-table invoice-items">
+                <thead>
+                    <tr>
+                        <th>No</th><th>Nama Barang</th><th>Kategori</th><th>Supplier</th>
+                        <th>Stok</th><th>Harga</th><th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>${barisTabel}</tbody>
+            </table>
+            <hr>
+            <p class="invoice-total">Total Nilai Inventaris: Rp ${new Intl.NumberFormat('id-ID').format(totalNilai)}</p>
+            <p class="invoice-footer">Dicetak otomatis dari Mini Inventory System</p>
+        </div>
+    `;
+
+    window.print();
+});
